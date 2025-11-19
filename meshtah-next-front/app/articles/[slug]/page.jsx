@@ -11,7 +11,7 @@ async function fetchArticle(slug) {
   });
 
   const articlesPromise = await fetch(
-    `http://localhost:1337/api/articles?${query}&populate[0]=image&populate[1]=writers&populate[2]=translators&populate[3]=source`
+    `http://strapi:1337/api/articles?${query}&populate[0]=image&populate[1]=writers&populate[2]=translators&populate[3]=source`
   );
   const article = await articlesPromise.json();
   return article.data[0];

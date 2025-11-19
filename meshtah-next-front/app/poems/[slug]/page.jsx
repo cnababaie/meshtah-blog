@@ -13,7 +13,7 @@ async function fetchPoem(slug) {
   });
 
   const poemsPromise = await fetch(
-    `http://localhost:1337/api/poems?${query}&populate[0]=image&populate[1]=writers&populate[2]=translators&populate[3]=source`
+    `http://strapi:1337/api/poems?${query}&populate[0]=image&populate[1]=writers&populate[2]=translators&populate[3]=source`
   );
   const poem = await poemsPromise.json();
   return poem.data[0];

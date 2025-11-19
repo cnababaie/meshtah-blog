@@ -1,0 +1,5 @@
+example.com {
+    reverse_proxy /api* strapi:1337
+    reverse_proxy next:3000
+}
+

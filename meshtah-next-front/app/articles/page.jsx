@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 
 async function getAllArticles() {
-    const articlesPromise = await fetch('http://localhost:1337/api/articles?populate[0]=image&populate[1]=writers')
+    const articlesPromise = await fetch('http://strapi:1337/api/articles?populate[0]=image&populate[1]=writers')
     const articles = await articlesPromise.json()
     return articles.data
 }

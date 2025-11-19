@@ -1,0 +1,12 @@
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[3].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[14].oneOf[3].use[2]!./node_modules/next/font/local/target.css?{"path":"app/page.jsx","import":"","arguments":[{"src":"../public/fonts/Amiri-Regular.ttf","variable":"--font-amiri"}],"variableName":"amiri"} ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+@font-face {
+font-family: 'amiri';
+src: url(/_next/static/media/1162a498177e69e9-s.p.ttf) format('truetype');
+font-display: swap;
+}@font-face {font-family: 'amiri Fallback';src: local("Arial");ascent-override: 124.28%;descent-override: 70.10%;line-gap-override: 0.00%;size-adjust: 90.44%
+}.__className_0a91f3 {font-family: 'amiri', 'amiri Fallback'
+}.__variable_0a91f3 {--font-amiri: 'amiri', 'amiri Fallback'
+}
+

@@ -3,13 +3,13 @@ import Link from 'next/link';
 
 
 async function getAllArticles() {
-    const articlesPromise = await fetch('http://localhost:1337/api/articles?populate[0]=image&populate[1]=writers&pagination[limit]=3')
+    const articlesPromise = await fetch('http://strapi:1337/api/articles?populate[0]=image&populate[1]=writers&pagination[limit]=3')
     const articles = await articlesPromise.json()
     return articles.data
 }
 
 async function getAllPoems() {
-    const poemsPromise = await fetch('http://localhost:1337/api/poems?populate[0]=image&populate[1]=writers&pagination[limit]=3')
+    const poemsPromise = await fetch('http://strapi:1337/api/poems?populate[0]=image&populate[1]=writers&pagination[limit]=3')
     const poems = await poemsPromise.json()
     return poems.data
 }

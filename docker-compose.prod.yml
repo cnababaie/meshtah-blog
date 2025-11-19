@@ -1,0 +1,28 @@
+services:
+  strapi:
+    build: ./meshtah-strapi-back
+    ports:
+      - "1337:1337"
+    environment:
+      NODE_ENV: production
+    restart: always
+
+  next:
+    build: ./meshtah-next-front
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    restart: always
+    
+  caddy:
+    image: caddy:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - next
+      - strapi
+

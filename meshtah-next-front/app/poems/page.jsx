@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 
 async function getAllPoems() {
-    const poemsPromise = await fetch('http://localhost:1337/api/poems?populate[0]=image&populate[1]=writers')
+    const poemsPromise = await fetch('http://strapi:1337/api/poems?populate[0]=image&populate[1]=writers')
     const poems = await poemsPromise.json()
     return poems.data
 }
