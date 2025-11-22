@@ -4,6 +4,8 @@ import remarkGfm from 'remark-gfm';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import DisqusComments from '../../../components/Comments';
+const API = process.env.NEXT_PUBLIC_API;
+export const dynamic = "force-dynamic";
 
 
 
@@ -13,7 +15,7 @@ async function fetchPoem(slug) {
   });
 
   const poemsPromise = await fetch(
-    `http://strapi:1337/api/poems?${query}&populate[0]=image&populate[1]=writers&populate[2]=translators&populate[3]=source`
+    `${API}/api/poems?${query}&populate[0]=image&populate[1]=writers&populate[2]=translators&populate[3]=source`
   );
   const poem = await poemsPromise.json();
   return poem.data[0];

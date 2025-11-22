@@ -1,9 +1,13 @@
 import localFont from 'next/font/local';
 import Link from 'next/link';
+const API = process.env.NEXT_PUBLIC_API;
+export const dynamic = "force-dynamic";
+
+
 
 
 async function getAllPoems() {
-    const poemsPromise = await fetch('http://strapi:1337/api/poems?populate[0]=image&populate[1]=writers')
+    const poemsPromise = await fetch(`${API}/api/poems?populate[0]=image&populate[1]=writers`)
     const poems = await poemsPromise.json()
     return poems.data
 }
