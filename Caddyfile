@@ -1,11 +1,13 @@
 meshtah.net {
     encode gzip
 
+    # Serve uploads from Strapi
     reverse_proxy /uploads/* strapi:1337
 
+    # API requests to Strapi
     reverse_proxy /api/* strapi:1337
 
-    reverse_proxy next:3000
+    # Everything else goes to Next.js
+    reverse_proxy /* next:3000
 }
-
 
