@@ -19,6 +19,7 @@ services:
   next:
     build:
       context: ./meshtah-next-front
+    command: npm run start
     container_name: next
     env_file: ./meshtah-next-front/.env.production
     restart: always
