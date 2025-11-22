@@ -18,9 +18,9 @@ services:
 
   next:
     build:
-      context: ./next
+      context: ./meshtah-next-front
     container_name: next
-    env_file: .env
+    env_file: ./meshtah-next-front/.env.production
     restart: always
     environment:
       NODE_ENV: production
