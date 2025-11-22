@@ -4,8 +4,8 @@ services:
   strapi:
     build:
       context: ./meshtah-strapi-back
-    container_name: ./meshtah-strapi-back/strapi
-    env_file: .env
+    container_name: strapi
+    env_file: ./meshtah-strapi-back/.env
     restart: always
     environment:
       NODE_ENV: production
