@@ -1,8 +1,14 @@
 meshtah.net {
-    reverse_proxy next:3000
-}
+    encode gzip
 
-meshtah.net/api* {
-    reverse_proxy strapi:1337
+    # API → Strapi (keeps /api prefix)
+    handle /api/* {
+        reverse_proxy strapi:1337
+    }
+
+    # Everything else → Next.js
+    handle {
+        reverse_proxy next:3000
+    }
 }
 

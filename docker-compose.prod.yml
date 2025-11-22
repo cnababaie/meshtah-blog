@@ -1,20 +1,20 @@
 services:
   strapi:
     build: ./meshtah-strapi-back
-    ports:
-      - "1337:1337"
     environment:
       NODE_ENV: production
+    networks:
+      - web
     restart: always
 
   next:
     build: ./meshtah-next-front
-    ports:
-      - "3000:3000"
     environment:
       NODE_ENV: production
+    networks:
+      - web
     restart: always
-    
+
   caddy:
     image: caddy:alpine
     ports:
@@ -25,4 +25,10 @@ services:
     depends_on:
       - next
       - strapi
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge
 
