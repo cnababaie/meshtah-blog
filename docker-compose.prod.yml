@@ -1,30 +1,45 @@
+version: "3.9"
+
 services:
   strapi:
-    build: ./meshtah-strapi-back
+    build:
+      context: ./strapi
+    container_name: strapi
+    env_file: .env
+    restart: always
     environment:
       NODE_ENV: production
+    volumes:
+      - ./strapi-data:/srv/app/public/uploads
     networks:
       - web
-    restart: always
+    expose:
+      - "1337"
 
   next:
-    build: ./meshtah-next-front
+    build:
+      context: ./next
+    container_name: next
+    env_file: .env
+    restart: always
     environment:
       NODE_ENV: production
     networks:
       - web
-    restart: always
+    expose:
+      - "3000"
 
   caddy:
-    image: caddy:alpine
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
-    depends_on:
-      - next
-      - strapi
+      - ./caddy-data:/data
+      - ./caddy-config:/config
     networks:
       - web
 
