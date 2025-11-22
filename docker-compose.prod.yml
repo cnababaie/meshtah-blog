@@ -3,7 +3,7 @@ version: "3.9"
 services:
   strapi:
     build:
-      context: ./strapi
+      context: ./meshtah-strapi-back
     container_name: strapi
     env_file: .env
     restart: always
