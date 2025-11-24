@@ -15,7 +15,7 @@ async function fetchPoem(slug) {
   });
 
   const poemsPromise = await fetch(
-    `${API}/api/poems?${query}&populate[0]=image&populate[1]=writers&populate[2]=translators&populate[3]=source`
+    `${API}/poems?${query}&populate[0]=image&populate[1]=writers&populate[2]=translators&populate[3]=source`
   );
   const poem = await poemsPromise.json();
   return poem.data[0];
