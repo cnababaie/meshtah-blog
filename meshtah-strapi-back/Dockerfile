@@ -20,8 +20,6 @@ RUN npm ci --only=production
 COPY . .
 
 # Build Strapi
-RUN npm run build
-
 RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
 EXPOSE 1337
