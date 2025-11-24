@@ -16,12 +16,6 @@ services:
       ADMIN_JWT_SECRET: supersecretadminjwt
       API_TOKEN_SALT: supersecrettoken
       STRAPI_ADMIN_BACKEND_URL: http://meshtah.net/api
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:1337/admin"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 60s
     restart: unless-stopped
 
   next:
@@ -34,8 +28,7 @@ services:
       NODE_ENV: production
       NEXT_PUBLIC_API: http://strapi:1337/
     depends_on:
-      strapi:
-        condition: service_healthy
+      strapi
     restart: unless-stopped
 
   nginx:
