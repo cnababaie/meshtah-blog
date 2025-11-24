@@ -1,18 +1,19 @@
-FROM node:22-alpine
-
-ENV NODE_OPTIONS=--max-old-space-size=4096
+FROM node:20-bullseye
 
 WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
-RUN npm install
 
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy app files
 COPY . .
 
-# build Next.js
+# Build Next.js
 RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "run", "develop"]
-
+CMD ["npm", "run", "start"]

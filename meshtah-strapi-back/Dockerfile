@@ -1,19 +1,27 @@
-FROM node:22
-
-ENV NODE_OPTIONS=--max-old-space-size=4096
+FROM node:20-bullseye
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+# Install build dependencies for better-sqlite3
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy app files
 COPY . .
 
-# build admin panel
+# Build Strapi
 RUN npm run build
 
-# expose port
 EXPOSE 1337
 
-CMD ["npm", "run", "develop"]
-
+CMD ["npm", "run", "start"]
