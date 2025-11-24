@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 
 async function getAllPoems() {
-    const poemsPromise = await fetch(`${API}/poems?populate[0]=image&populate[1]=writers`)
+    const poemsPromise = await fetch(`${API}poems?populate[0]=image&populate[1]=writers`)
     const poems = await poemsPromise.json()
     return poems.data
 }

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 
 async function getAllArticles() {
-    const articlesPromise = await fetch(`${API}/articles?populate[0]=image&populate[1]=writers`)
+    const articlesPromise = await fetch(`${API}articles?populate[0]=image&populate[1]=writers`)
     const articles = await articlesPromise.json()
     return articles.data
 }

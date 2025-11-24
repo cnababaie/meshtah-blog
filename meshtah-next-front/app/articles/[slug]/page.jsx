@@ -14,7 +14,7 @@ async function fetchArticle(slug) {
   });
 
   const articlesPromise = await fetch(
-    `${API}/articles?${query}&populate[0]=image&populate[1]=writers&populate[2]=translators&populate[3]=source`
+    `${API}articles?${query}&populate[0]=image&populate[1]=writers&populate[2]=translators&populate[3]=source`
   );
   const article = await articlesPromise.json();
   return article.data[0];
