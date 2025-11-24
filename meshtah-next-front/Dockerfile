@@ -14,6 +14,8 @@ COPY . .
 # Build Next.js
 RUN npm run build
 
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
+
 EXPOSE 3000
 
 CMD ["npm", "run", "start"]
