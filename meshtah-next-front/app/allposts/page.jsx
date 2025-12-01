@@ -57,7 +57,7 @@ export default async function Page() {
                                 </span>
                                 
                                 <img 
-                                    src={`http://localhost:1337${post.image?.formats?.thumbnail?.url || post.attributes?.image?.data?.attributes?.formats?.thumbnail?.url}`} 
+                                    src={`${BASE}${post.image?.formats?.thumbnail?.url || post.attributes?.image?.data?.attributes?.formats?.thumbnail?.url}`} 
                                     alt={post.name || post.attributes?.name} 
                                     className="inline-block md:max-w-[40%] md:h-[50%] object-cover"
                                 />

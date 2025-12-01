@@ -136,7 +136,7 @@ export default async function Page({ params }) {
         <div className="headerimg">
           <img
             className="md:rounded-lg"
-            src={`http://localhost:1337${article.image.url}`}
+            src={`${BASE}${article.image.url}`}
             alt={article.name}
           />
         </div>
@@ -237,7 +237,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: article.name,
       description: article.description,
-      images: [`http://localhost:1337${article.image?.url}`],
+      images: [`${BASE}${article.image?.url}`],
     },
   };
 }

@@ -1,17 +1,20 @@
 import localFont from 'next/font/local';
 import Link from 'next/link';
-const API = process.env.NEXT_PUBLIC_API;
+const RAW_API = process.env.NEXT_PUBLIC_API;
+const API = RAW_API.replace(/\/$/, '');
+const BASE = API.replace('/api', '');
+
 export const dynamic = "force-dynamic";
 
 
 async function getAllArticles() {
-    const articlesPromise = await fetch(`${API}articles?populate[0]=image&populate[1]=writers&pagination[limit]=3`)
+    const articlesPromise = await fetch(`${API}/articles?populate[0]=image&populate[1]=writers&pagination[limit]=3`)
     const articles = await articlesPromise.json()
     return articles.data
 }
 
 async function getAllPoems() {
-    const poemsPromise = await fetch(`${API}poems?populate[0]=image&populate[1]=writers&pagination[limit]=3`)
+    const poemsPromise = await fetch(`${API}/poems?populate[0]=image&populate[1]=writers&pagination[limit]=3`)
     const poems = await poemsPromise.json()
     return poems.data
 }
@@ -52,7 +55,7 @@ export default async function Page() {
                             <li key={article.id} className="card border rounded-lg hover:shadow-2xl transition-shadow relative md:my-4">
                                 <Link className="text-white" href={`/articles/${article.slug}`}>
                                     <span className='pubdate absolute bg-dustyred z-10 p-1 rounded left-0'>{new Date(article.createdAt).toLocaleDateString('fa-IR', {year: 'numeric', month: 'long', day: 'numeric'})}</span>
-                                    <img src={`http://localhost:1337${article.image.formats.thumbnail.url}`} alt={article.name} />
+                                    <img src={`${BASE}${article.image.formats.thumbnail.url}`} alt={article.name} />
                                     <div className='details p-2 bg-dustyred rounded-t-xl'>
                                         <span className="text-md md:text-xl font-semibold">{article.name} - {(article.writers ?? []).map(w => w.name).join(", ")}</span>
                                     </div>
@@ -72,7 +75,7 @@ export default async function Page() {
                             <li key={poem.id} className="card border rounded-lg hover:shadow-2xl transition-shadow relative md:my-4">
                                 <Link className="text-white" href={`/poems/${poem.slug}`}>
                                 <span className='pubdate absolute bg-dustyred z-10 p-1 rounded left-0'>{new Date(poem.createdAt).toLocaleDateString('fa-IR', {year: 'numeric', month: 'long', day: 'numeric'})}</span>
-                                    <img src={`http://localhost:1337${poem.image.formats.thumbnail.url}`} alt={poem.name} />
+                                    <img src={`${BASE}${poem.image.formats.thumbnail.url}`} alt={poem.name} />
                                     <div className='details p-2 bg-dustyred rounded-t-xl'>
                                         <span className="text-md md:text-xl font-semibold">{poem.name} - {(poem.writers ?? []).map(w => w.name).join(", ")}</span>
                                     </div>
