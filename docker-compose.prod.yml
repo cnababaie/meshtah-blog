@@ -2,44 +2,59 @@ version: "3.9"
 
 services:
   strapi:
+    working_dir: /app
     build: ./meshtah-strapi-back
+    command: sh -c "npm install && npm run build && npm run start"
+    # Do NOT expose 1337 to the outside world (we'll use subdomain instead)
+    # ports:
+    #   - "1337:1337"
+    volumes:
+      - ./meshtah-strapi-back:/app
+      - ./meshtah-strapi-back/.tmp:/app/.tmp
+      - /app/node_modules
     environment:
       NODE_ENV: production
       NODE_OPTIONS: "--max-old-space-size=4096"
       DATABASE_CLIENT: sqlite
       DATABASE_FILENAME: /app/.tmp/data.db
-      HOST: 0.0.0.0
-      PORT: 80
-      PUBLIC_URL: https://meshtah.net
-    volumes:
-      - ./meshtah-strapi-back:/app
-      - ./meshtah-strapi-back/.tmp:/app/.tmp
-      - /app/node_modules
-    expose:
-      - "80"
+      # Important: Strapi must know its real public URL
+      PUBLIC_URL: https://api.meshtah.net
     restart: unless-stopped
+    networks:
+      - internal
 
   next:
     build: ./meshtah-next-front
-    environment:
-      NODE_ENV: production
-      NEXT_PUBLIC_STRAPI_URL: https://meshtah.net
+    # ports not needed — only nginx talks to it
     volumes:
       - ./meshtah-next-front/.next:/app/.next
       - /app/node_modules
-    expose:
-      - "3000"
+    environment:
+      NODE_ENV: production
+      # This is the only change you need in your Next.js code
+      NEXT_PUBLIC_STRAPI_URL: https://api.meshtah.net
+    depends_on:
+      - strapi
     restart: unless-stopped
+    networks:
+      - internal
 
-  reverse-proxy:
+  nginx:
     image: nginx:alpine
+    container_name: nginx
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./certs:/etc/letsencrypt:ro
-      - ./proxy.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
-      - strapi
       - next
+      - strapi
     restart: unless-stopped
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
