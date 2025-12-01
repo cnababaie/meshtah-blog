@@ -1,17 +1,19 @@
 import localFont from 'next/font/local';
 import Link from 'next/link';
-const API = process.env.NEXT_PUBLIC_API;
+const RAW_API = process.env.NEXT_PUBLIC_API;
+const API = RAW_API.replace(/\/$/, '');
+const BASE = API.replace('/api', '');
 export const dynamic = "force-dynamic";
 
 
 async function getAllArticles() {
-    const articlesPromise = await fetch(`${API}articles?populate[0]=image&populate[1]=writers`)
+    const articlesPromise = await fetch(`${API}/articles?populate[0]=image&populate[1]=writers`)
     const articles = await articlesPromise.json()
     return articles.data
 }
 
 async function getAllPoems() {
-    const poemsPromise = await fetch(`${API}poems?populate[0]=image&populate[1]=writers`)
+    const poemsPromise = await fetch(`${API}/poems?populate[0]=image&populate[1]=writers`)
     const poems = await poemsPromise.json()
     return poems.data
 }
