@@ -1,4 +1,4 @@
 .yml
 .env
 Caddyfile
-.next/
+.next
