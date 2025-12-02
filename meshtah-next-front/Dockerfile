@@ -2,18 +2,13 @@ FROM node:20-bullseye
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy app files
 COPY . .
 
-# Build Next.js
-RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
+RUN apt-get update && apt-get install -y python3 make g++ \
+ && npm install \
+ && npm run build \
+ && apt-get remove -y python3 make g++ && apt-get autoremove -y
 
-EXPOSE 3000
+ENV NODE_ENV=production
 
 CMD ["npm", "run", "start"]
