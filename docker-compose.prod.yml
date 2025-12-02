@@ -5,19 +5,13 @@ services:
     working_dir: /app
     build: ./meshtah-strapi-back
     command: sh -c "npm install && npm run build && npm run start"
-    # Do NOT expose 1337 to the outside world (we'll use subdomain instead)
-    # ports:
-    #   - "1337:1337"
     volumes:
-      - ./meshtah-strapi-back:/app
-      - ./meshtah-strapi-back/.tmp:/app/.tmp
-      - /app/node_modules
+    - ./meshtah-strapi-back/.tmp:/app/.tmp
     environment:
       NODE_ENV: production
       NODE_OPTIONS: "--max-old-space-size=4096"
       DATABASE_CLIENT: sqlite
       DATABASE_FILENAME: /app/.tmp/data.db
-      # Important: Strapi must know its real public URL
       PUBLIC_URL: https://api.meshtah.net
     restart: unless-stopped
     networks:
