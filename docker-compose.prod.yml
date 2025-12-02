@@ -25,13 +25,8 @@ services:
 
   next:
     build: ./meshtah-next-front
-    # ports not needed — only nginx talks to it
-    volumes:
-      - ./meshtah-next-front/.next:/app/.next
-      - /app/node_modules
     environment:
       NODE_ENV: production
-      # This is the only change you need in your Next.js code
       NEXT_PUBLIC_STRAPI_URL: https://api.meshtah.net
     depends_on:
       - strapi
