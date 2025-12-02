@@ -1,23 +1,45 @@
+version: "3.9"
+
 services:
   strapi:
+    working_dir: /app
     build: ./meshtah-strapi-back
-    command: npm run develop
-    ports:
-      - "1337:1337"
     volumes:
-      - ./meshtah-strapi-back:/app
-      - /app/node_modules
+      - ./meshtah-strapi-back/.tmp:/app/.tmp
     environment:
       NODE_ENV: development
+      NODE_OPTIONS: "--max-old-space-size=4096"
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: /app/.tmp/data.db
+      PUBLIC_URL: https://meshtah.net
+      APP_KEYS: "K7mP9qRx2sT4uV4wY8zA0bC2dE4fG6hI,jH8gF6eD2cB2aZ0yX8wV6uT4sR2qP0mN"
+      API_TOKEN_SALT: "8f4e2c1a9b7d5f3e1c9b8b6d4f2e1c0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c"
+      ADMIN_JWT_SECRET: "c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p9q7r8s9t0"
+      JWT_SECRET: "t0pS3cr3tJw7K3yF1rUs3r4uth3nt1c4tasde0k3n5tr1ngH3r3"
+    restart: unless-stopped
+    networks:
+      - internal
 
   next:
     build: ./meshtah-next-front
-    command: npm run dev
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./meshtah-next-front:/app
-      - /app/node_modules
     environment:
       NODE_ENV: development
+      NEXT_PUBLIC_STRAPI_URL: https://meshtah.net
+    ports:                  
+      - "3000:3000"        
+    expose:
+      - "3000"             
+    depends_on:
+      - strapi
+    restart: unless-stopped
+    networks:
+      - internal
 
+networks:
+  internal:
+    driver: bridge
+
+# Persistent volumes for certificates and config so you don’t re-issue certs every time
+volumes:
+  caddy_data:
+  caddy_config:
