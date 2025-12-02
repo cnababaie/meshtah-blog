@@ -1,0 +1,26 @@
+meshtah.net {
+    root * /srv
+    file_server
+
+    # Next.js API routes and _next assets
+    handle /_next/* {
+        file_server
+    }
+
+    handle /api/* {
+        reverse_proxy strapi:1337
+    }
+
+    handle /uploads/* {
+        reverse_proxy strapi:1337
+    }
+
+    handle /admin* {
+        reverse_proxy strapi:1337
+    }
+
+    handle {
+        rewrite * /{http.request.uri.path}
+        file_server
+    }
+}
