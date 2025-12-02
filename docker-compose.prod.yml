@@ -7,7 +7,7 @@ services:
     volumes:
       - ./meshtah-strapi-back/.tmp:/app/.tmp
     env_file:
-      - .env
+      - ./meshtah-strapi-back/.env
     environment:
       NODE_ENV: production
       NODE_OPTIONS: "--max-old-space-size=4096"
