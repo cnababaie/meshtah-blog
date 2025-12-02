@@ -4,7 +4,6 @@ services:
   strapi:
     working_dir: /app
     build: ./meshtah-strapi-back
-    command: sh -c "npm install && npm run build && npm run start"
     volumes:
     - ./meshtah-strapi-back/.tmp:/app/.tmp
     environment:
