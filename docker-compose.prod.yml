@@ -5,7 +5,7 @@ services:
     working_dir: /app
     build: ./meshtah-strapi-back
     volumes:
-    - ./meshtah-strapi-back/.tmp:/app/.tmp
+      - ./meshtah-strapi-back/.tmp:/app/.tmp
     environment:
       NODE_ENV: production
       NODE_OPTIONS: "--max-old-space-size=4096"
@@ -31,22 +31,29 @@ services:
     networks:
       - internal
 
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
+  # ←←←←←←←←←  NEW CADDY SERVICE  →→→→→→→→→
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro          # ← you will create this file
+      - caddy_data:/data
+      - caddy_config:/config
     depends_on:
       - next
       - strapi
-    restart: unless-stopped
     networks:
       - internal
 
 networks:
   internal:
     driver: bridge
+
+# Persistent volumes for certificates and config so you don’t re-issue certs every time
+volumes:
+  caddy_data:
+  caddy_config:
