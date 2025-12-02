@@ -1,26 +1,10 @@
 meshtah.net {
-    root * /srv
-    file_server
+    header Cross-Origin-Opener-Policy same-origin-allow-popups
+    header Cross-Origin-Embedder-Policy unsafe-none
 
-    # Next.js API routes and _next assets
-    handle /_next/* {
-        file_server
-    }
+    reverse_proxy /api/*      strapi:1337
+    reverse_proxy /uploads/*  strapi:1337
+    reverse_proxy /admin*     strapi:1337
 
-    handle /api/* {
-        reverse_proxy strapi:1337
-    }
-
-    handle /uploads/* {
-        reverse_proxy strapi:1337
-    }
-
-    handle /admin* {
-        reverse_proxy strapi:1337
-    }
-
-    handle {
-        rewrite * /{http.request.uri.path}
-        file_server
-    }
+    reverse_proxy next:3000
 }

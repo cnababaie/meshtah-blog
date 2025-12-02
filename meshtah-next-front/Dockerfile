@@ -12,3 +12,5 @@ RUN apt-get update && apt-get install -y python3 make g++ \
 ENV NODE_ENV=production
 
 CMD ["npm", "run", "start"]
+
+EXPOSE 3000

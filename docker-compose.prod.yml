@@ -25,6 +25,10 @@ services:
     environment:
       NODE_ENV: production
       NEXT_PUBLIC_STRAPI_URL: https://meshtah.net
+    ports:                  
+      - "3000:3000"        
+    expose:
+      - "3000"             
     depends_on:
       - strapi
     restart: unless-stopped
