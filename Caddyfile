@@ -1,17 +1,30 @@
-handle /api/* {
-    reverse_proxy strapi:1337 {
-        header_up Host {host}
-        header_up X-Forwarded-Proto https
+meshtah.net {
+    reverse_proxy next:3000
 
-        header_down Set-Cookie ".*" "{http.reverse_proxy.header.Set-Cookie}; Secure; SameSite=None; Domain=meshtah.net"
+    handle_path /uploads/* {
+        root * /strapi_uploads
+        file_server
+    }
+
+    handle /api/* {
+        reverse_proxy strapi:1337 {
+            header_up Host {host}
+            header_up X-Forwarded-Proto https
+
+            header_down Set-Cookie ".*" "{http.reverse_proxy.header.Set-Cookie}; Domain=meshtah.net; Secure; SameSite=None"
+        }
+    }
+
+    handle /admin* {
+        reverse_proxy strapi:1337 {
+            header_up Host {host}
+            header_up X-Forwarded-Proto https
+
+            header_down Set-Cookie ".*" "{http.reverse_proxy.header.Set-Cookie}; Domain=meshtah.net; Secure; SameSite=None"
+        }
     }
 }
 
-handle /admin* {
-    reverse_proxy strapi:1337 {
-        header_up Host {host}
-        header_up X-Forwarded-Proto https
-
-        header_down Set-Cookie ".*" "{http.reverse_proxy.header.Set-Cookie}; Secure; SameSite=None; Domain=meshtah.net"
-    }
+www.meshtah.net {
+    redir https://meshtah.net{uri}
 }
