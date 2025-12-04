@@ -2,9 +2,18 @@ meshtah.net {
     header Cross-Origin-Opener-Policy same-origin-allow-popups
     header Cross-Origin-Embedder-Policy unsafe-none
 
-    reverse_proxy /api/*      strapi:1337
-    reverse_proxy /uploads/*  strapi:1337
-    reverse_proxy /admin*     strapi:1337
+    handle_path /api/* {
+        reverse_proxy strapi:1337
+    }
 
+    handle_path /uploads/* {
+        reverse_proxy strapi:1337
+    }
+
+    handle_path /admin* {
+        reverse_proxy strapi:1337
+    }
+
+    # default: send everything else to next.js
     reverse_proxy next:3000
 }
