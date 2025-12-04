@@ -1,19 +1,24 @@
 meshtah.net {
-    header Cross-Origin-Opener-Policy same-origin-allow-popups
-    header Cross-Origin-Embedder-Policy unsafe-none
-
-    handle_path /api/* {
-        reverse_proxy strapi:1337
-    }
-
-    handle_path /uploads/* {
-        reverse_proxy strapi:1337
-    }
-
-    handle_path /admin* {
-        reverse_proxy strapi:1337
-    }
-
-    # default: send everything else to next.js
     reverse_proxy next:3000
+
+    # Optional: serve Strapi uploads directly (faster)
+    handle_path /uploads/* {
+        root * /strapi_uploads
+        file_server
+    }
+
+    # API proxy
+    handle /api/* {
+        reverse_proxy strapi:1337
+    }
+
+    # Admin panel
+    handle /admin* {
+        reverse_proxy strapi:1337
+    }
+}
+
+# If you have www → main domain redirect
+www.meshtah.net {
+    redir https://meshtah.net{uri}
 }

@@ -1,40 +1,61 @@
 version: "3.9"
 
 services:
-  strapi:
-    working_dir: /app
-    build: ./meshtah-strapi-back
-    volumes:
-      - ./meshtah-strapi-back/.tmp:/app/.tmp
-    env_file:
-      - ./meshtah-strapi-back/.env
-    environment:
-      NODE_ENV: production
-      NODE_OPTIONS: "--max-old-space-size=4096"
-      DATABASE_CLIENT: sqlite
-      DATABASE_FILENAME: /app/.tmp/data.db
-      PUBLIC_URL: https://meshtah.net
-
+  # ============== POSTGRESQL ==============
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
     restart: unless-stopped
+    env_file:
+      - ./meshtah-strapi-back/.env          # Loads POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - internal
 
+  # ============== STRAPI BACKEND ==============
+  strapi:
+    build: ./meshtah-strapi-back
+    container_name: strapi
+    restart: unless-stopped
+    env_file:
+      - ./meshtah-strapi-back/.env          # All secrets + DB config come from here
+    environment:
+      # Only overrides/additions that are truly needed
+      NODE_ENV: production
+      NODE_OPTIONS: "--max-old-space-size=4096"
+      PUBLIC_URL: https://meshtah.net
+
+      # Force Strapi to read DB vars with the exact names it expects
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      # The rest (NAME, USERNAME, PASSWORD, SSL...) are already in .env
+    volumes:
+      - strapi_uploads:/app/public/uploads
+    depends_on:
+      - postgres
+    networks:
+      - internal
+
+  # ============== NEXT.JS FRONTEND ==============
   next:
     build: ./meshtah-next-front
+    container_name: next
+    restart: unless-stopped
     environment:
       NODE_ENV: production
       NEXT_PUBLIC_STRAPI_URL: https://meshtah.net
-    ports:                  
-      - "3000:3000"        
+    ports:
+      - "3000:3000"
     expose:
-      - "3000"             
+      - "3000"
     depends_on:
       - strapi
-    restart: unless-stopped
     networks:
       - internal
 
-  # ←←←←←←←←←  NEW CADDY SERVICE  →→→→→→→→→
+  # ============== CADDY REVERSE PROXY ==============
   caddy:
     image: caddy:2-alpine
     container_name: caddy
@@ -42,21 +63,25 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "443:443/udp"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro          # ← you will create this file
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+      - strapi_uploads:/strapi_uploads:ro
     depends_on:
       - next
       - strapi
     networks:
       - internal
 
+# ============== NETWORK & VOLUMES ==============
 networks:
   internal:
     driver: bridge
 
-# Persistent volumes for certificates and config so you don’t re-issue certs every time
 volumes:
+  postgres_data:
+  strapi_uploads:
   caddy_data:
   caddy_config:
