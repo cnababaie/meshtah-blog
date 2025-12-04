@@ -8,25 +8,33 @@ meshtah.net {
 
     handle /api/* {
         reverse_proxy strapi:1337 {
-            # Very important: rewrite Set-Cookie headers so cookies work on your real domain
-            header_up X-Forwarded-Proto {scheme}
-            header_up X-Forwarded-Host {host}
-            header_up Host {upstream_hostport}
+            header_up Host {host}
+            header_up X-Forwarded-Proto https
 
-            # Fix cookies: force domain and make them Secure + SameSite=None
-            @cookie_set header_regexp Set-Cookie (.*)
-            header @cookie_set Set-Cookie "{re.cookie_set.1}; Domain=meshtah.net; Path=/; Secure; SameSite=None"
+            transport http {
+                response_header_timeout 60s
+            }
+            header_down Set-Cookie "Domain=localhost;.*" "Domain=meshtah.net; Secure; SameSite=None"
+            header_down Set-Cookie "Domain=strapi;.*" "Domain=meshtah.net; Secure; SameSite=None"
+            header_down Set-Cookie "(; *Secure;?)" "; Secure; SameSite=None"
+            header_down +Set-Cookie "SameSite=Lax" "SameSite=None"
+            header_down +Set-Cookie "SameSite=Strict" "SameSite=None"
         }
     }
 
     handle /admin* {
         reverse_proxy strapi:1337 {
-            header_up X-Forwarded-Proto {scheme}
-            header_up X-Forwarded-Host {host}
-            header_up Host {upstream_hostport}
+            header_up Host {host}
+            header_up X-Forwarded-Proto https
 
-            @cookie_set header_regexp Set-Cookie (.*)
-            header @cookie_set Set-Cookie "{re.cookie_set.1}; Domain=meshtah.net; Path=/; Secure; SameSite=None"
+            transport http {
+                response_header_timeout 60s
+            }
+            header_down Set-Cookie "Domain=localhost;.*" "Domain=meshtah.net; Secure; SameSite=None"
+            header_down Set-Cookie "Domain=strapi;.*" "Domain=meshtah.net; Secure; SameSite=None"
+            header_down Set-Cookie "(; *Secure;?)" "; Secure; SameSite=None"
+            header_down +Set-Cookie "SameSite=Lax" "SameSite=None"
+            header_down +Set-Cookie "SameSite=Strict" "SameSite=None"
         }
     }
 }
