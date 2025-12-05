@@ -22,7 +22,9 @@ services:
       NODE_ENV: production
       NODE_OPTIONS: "--max-old-space-size=4096"
       PUBLIC_URL: https://meshtah.net
-
+      ADMIN_URL: https://meshtah.net/admin
+      STRAPI_ENABLE_PROXY: "true"
+      COOKIE_DOMAIN: meshtah.net
       DATABASE_CLIENT: postgres
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
