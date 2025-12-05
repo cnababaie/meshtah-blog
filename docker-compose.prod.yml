@@ -61,8 +61,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/upstream.conf:/etc/nginx/conf.d/upstream.conf:ro
-      - ./nginx/strapi.conf:/etc/nginx/sites-available/strapi.conf:ro
-      - ./nginx/strapi.conf:/etc/nginx/sites-enabled/strapi.conf:ro
+      - ./nginx/strapi.conf:/etc/nginx/conf.d/strapi.conf:ro
 
       - /etc/letsencrypt:/etc/letsencrypt:ro
 
