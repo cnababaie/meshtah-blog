@@ -1,36 +1,31 @@
 version: "3.9"
 
 services:
-  # ============== POSTGRESQL ==============
   postgres:
     image: postgres:16-alpine
     container_name: postgres
     restart: unless-stopped
     env_file:
-      - ./meshtah-strapi-back/.env          # Loads POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+      - ./meshtah-strapi-back/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - internal
 
-  # ============== STRAPI BACKEND ==============
   strapi:
     build: ./meshtah-strapi-back
     container_name: strapi
     restart: unless-stopped
     env_file:
-      - ./meshtah-strapi-back/.env          # All secrets + DB config come from here
+      - ./meshtah-strapi-back/.env
     environment:
-      # Only overrides/additions that are truly needed
       NODE_ENV: production
       NODE_OPTIONS: "--max-old-space-size=4096"
       PUBLIC_URL: https://meshtah.net
 
-      # Force Strapi to read DB vars with the exact names it expects
       DATABASE_CLIENT: postgres
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
-      # The rest (NAME, USERNAME, PASSWORD, SSL...) are already in .env
     volumes:
       - strapi_uploads:/app/public/uploads
     depends_on:
@@ -38,7 +33,6 @@ services:
     networks:
       - internal
 
-  # ============== NEXT.JS FRONTEND ==============
   next:
     build: ./meshtah-next-front
     container_name: next
@@ -55,27 +49,28 @@ services:
     networks:
       - internal
 
-  # ============== CADDY REVERSE PROXY ==============
-  caddy:
-    image: caddy:2-alpine
-    container_name: caddy
+  nginx:
+    image: nginx:stable
+    container_name: nginx
     restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-      - strapi_uploads:/strapi_uploads:ro
     depends_on:
       - next
       - strapi
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/upstream.conf:/etc/nginx/conf.d/upstream.conf:ro
+      - ./nginx/strapi.conf:/etc/nginx/sites-available/strapi.conf:ro
+      - ./nginx/strapi.conf:/etc/nginx/sites-enabled/strapi.conf:ro
+
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+
+      - strapi_uploads:/strapi_uploads:ro
     networks:
       - internal
 
-# ============== NETWORK & VOLUMES ==============
+
 networks:
   internal:
     driver: bridge
@@ -83,5 +78,3 @@ networks:
 volumes:
   postgres_data:
   strapi_uploads:
-  caddy_data:
-  caddy_config:
